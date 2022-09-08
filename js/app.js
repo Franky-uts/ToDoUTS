@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 listatareas.addEventListener('click', e => {
-    btnAcciones();
+    btnAcciones(e)
 })
 
 formulario.addEventListener('submit',event =>{
@@ -26,7 +26,7 @@ formulario.addEventListener('submit',event =>{
 const setTarea = e => {
     const texto = e.target.querySelector('input').value
     //console.log(texto)
-    if(texto.trim()===' '){
+    if(texto.trim()==''){
         console.log('Cadena vacia')
         return
     }
@@ -44,21 +44,27 @@ const setTarea = e => {
 const pintarTareas = () =>{
     localStorage.setItem('tareas',JSON.stringify(Tareas))
     if (Object.values(Tareas).length === 0) {
-        listatareas.innerHTML = ''
-        Object.values(Tareas).forEach(item=>{
-            const clone = template.cloneNode(True)
-            clone.querySelector('p').textContent = item.texto
-            if(item.estado){
-                clone.querySelectorAll('.fas')[0].classList.replace('fa-check-circle','fa-undo-alt')
-                clone.querySelector('.alert').classList.replace('alert-warning', 'alert-primary')
-                clone.querySelector('p').style.textDecoration = 'line-through'
-            }
-            clone.querySelectorAll('.fas')[0].dataset.id = item.id
-            clone.querySelectorAll('.fas')[1].dataset.id = item.id
-            fragment.appendChild(clone)
-        })
-        listatareas.appendChild(fragment)
+        listatareas.innerHTML =         
+        `<div class="alert alert-dark">
+            sin tareas pendientes
+        </div>`
+        return
     }
+    listatareas.innerHTML = ''
+    Object.values(Tareas).forEach(item=>{
+        //console.log('item',item)
+        const clone = template.cloneNode(True)
+        clone.querySelector('p').textContent = item.texto
+        if(item.estado){
+            clone.querySelectorAll('.fas')[0].classList.replace('fa-check-circle','fa-undo-alt')
+            clone.querySelector('.alert').classList.replace('alert-warning', 'alert-primary')
+            clone.querySelector('p').style.textDecoration = 'line-through'
+        }
+        clone.querySelectorAll('.fas')[0].dataset.id = item.id
+        clone.querySelectorAll('.fas')[1].dataset.id = item.id
+        fragment.appendChild(clone)
+    })
+    listatareas.appendChild(fragment)
 }
 
 const btnAcciones = e => {
